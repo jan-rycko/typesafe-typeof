@@ -1,4 +1,5 @@
-import {isTypeOf, typeOf, Type} from './typeof';
+import {isTypeOf, Type, typeOf} from './typeof';
+import {isEmpty} from './empty';
 
 console.log(typeOf(true)); // 'boolean'
 console.log(typeOf(1)); // 'number'
@@ -25,5 +26,17 @@ const checkType = (x: string | any[] | RegExp) => {
 
     if (isTypeOf(x, Type.regexp)) { // build-in enum is also provided
         x.test('a');
+    }
+};
+
+const checkEmptyness = (x: string | any[]) => {
+    if (isTypeOf(x, Type.string) && isEmpty<'string'>(x)) {
+        // if (x === 'a') { // Typeerror – x is empty string: ''
+
+        // }
+
+        if (x === '') { // ok
+            return true;
+        }
     }
 };

@@ -1,4 +1,5 @@
 import { typeOf as nonTypedTypeof } from 'remedial';
+import {PickByValueExact} from 'utility-types';
 
 export enum Type {
     boolean = 'boolean',
@@ -15,7 +16,7 @@ export enum Type {
     undefined = 'undefined',
 }
 
-interface StringToTypeMap {
+export interface StringToTypeMap {
     boolean: boolean
     number: number
     string: string
@@ -30,9 +31,10 @@ interface StringToTypeMap {
     undefined: undefined
 }
 
-type NormalizedType = keyof StringToTypeMap;
+export type NormalizedTypeName<T extends keyof StringToTypeMap = keyof StringToTypeMap> = T;
+export type NormalizedType<T extends NormalizedTypeName = NormalizedTypeName> = StringToTypeMap[T];
 
-const typeOf = (obj: any): NormalizedType => {
+export const typeOf = <T extends NormalizedType, N extends keyof PickByValueExact<StringToTypeMap, T>>(obj: T): N => {
     const type = nonTypedTypeof(obj); // supports array, date, regexp and null type but defaults to object for some reason
 
     return type === 'object' ?
@@ -40,11 +42,6 @@ const typeOf = (obj: any): NormalizedType => {
         : type;
 };
 
-const isTypeOf = <K extends NormalizedType | Type>(obj: any, type: K): obj is StringToTypeMap[K] => {
+export const isTypeOf = <K extends NormalizedTypeName | Type>(obj: any, type: K): obj is StringToTypeMap[K] => {
     return typeOf(obj) === type;
-};
-
-export {
-    typeOf,
-    isTypeOf,
 };
