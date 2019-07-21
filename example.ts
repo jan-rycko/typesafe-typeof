@@ -15,7 +15,7 @@ console.log(typeOf(undefined)); // 'undefined'
 
 const checkType = (x: string | any[]) => {
     if (typeOf(x) === 'array') {
-        // x.map(z => z); // Typeerror – typeOf returns array, so no typechecking here
+        // x.map(z => z); // Typeerror – typeOf returns string 'array', so no typechecking here
     }
 
     if (isTypeOf(x, 'string')) {
