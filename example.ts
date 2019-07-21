@@ -1,21 +1,17 @@
 import {typeOf, isTypeOf} from './typeof';
 
-console.log({
-    isBoolean: isTypeOf(true, 'boolean'),
-    isNumber: isTypeOf(1, 'number'),
-    isString: isTypeOf('a', 'string'),
-    isFunction: isTypeOf(() => {}, 'function'),
-    isArray: isTypeOf([], 'array'),
-    isDate: isTypeOf(new Date(), 'date'),
-    isRegexp: isTypeOf(/a/, 'regexp'),
-    isObject: isTypeOf({}, 'object'),
-    isBigint: isTypeOf(BigInt(1), 'bigint'), // 1n (bigint literal) would also work
-    isSymbol: isTypeOf(Symbol(), 'symbol'),
-    isNull: isTypeOf(null, 'null'),
-    isUndefined: isTypeOf(undefined, 'undefined'),
-});
-
-
+console.log(typeOf(true)); // 'boolean'
+console.log(typeOf(1)); // 'number'
+console.log(typeOf('a')); // 'string'
+console.log(typeOf(() => {})); // 'function'
+console.log(typeOf([])); // 'array'
+console.log(typeOf(new Date())); // 'date'
+console.log(typeOf(/a/)); // 'regexp'
+console.log(typeOf({})); // 'object'
+console.log(typeOf(BigInt(1))); // 'bigint'
+console.log(typeOf(Symbol())); // 'symbol'
+console.log(typeOf(null)); // 'null'
+console.log(typeOf(undefined)); // 'undefined'
 
 const checkType = (x: string | any[]) => {
     if (typeOf(x) === 'array') {

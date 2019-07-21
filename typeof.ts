@@ -1,7 +1,5 @@
 import { typeOf as nonTypedTypeof } from 'remedial';
 
-type AnyIndex = string | number
-
 interface StringToType {
     boolean: boolean
     number: number
@@ -10,7 +8,7 @@ interface StringToType {
     array: any[]
     date: Date
     regexp: RegExp
-    object: { [I in AnyIndex]?: any }
+    object: { [I in string | number]?: any }
     bigint: bigint
     symbol: symbol
     null: null
