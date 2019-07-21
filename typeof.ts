@@ -1,6 +1,21 @@
 import { typeOf as nonTypedTypeof } from 'remedial';
 
-interface StringToType {
+export enum Type {
+    boolean = 'boolean',
+    number = 'number',
+    string = 'string',
+    function = 'function',
+    array = 'array',
+    date = 'date',
+    regexp = 'regexp',
+    object = 'object',
+    bigint = 'bigint',
+    symbol = 'symbol',
+    null = 'null',
+    undefined = 'undefined',
+}
+
+interface StringToTypeMap {
     boolean: boolean
     number: number
     string: string
@@ -15,9 +30,9 @@ interface StringToType {
     undefined: undefined
 }
 
-type NormalizedType = keyof StringToType;
+type NormalizedType = keyof StringToTypeMap;
 
-const typeOf: (obj: any) => NormalizedType = (obj) => {
+const typeOf = (obj: any): NormalizedType => {
     const type = nonTypedTypeof(obj); // supports array, date, regexp and null type but defaults to object for some reason
 
     return type === 'object' ?
@@ -25,7 +40,7 @@ const typeOf: (obj: any) => NormalizedType = (obj) => {
         : type;
 };
 
-const isTypeOf = <K extends NormalizedType>(obj: any, type: K): obj is StringToType[K] => {
+const isTypeOf = <K extends NormalizedType | Type>(obj: any, type: K): obj is StringToTypeMap[K] => {
     return typeOf(obj) === type;
 };
 
