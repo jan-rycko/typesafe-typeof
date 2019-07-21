@@ -18,9 +18,11 @@ interface StringToType {
 type NormalizedType = keyof StringToType;
 
 const typeOf: (obj: any) => NormalizedType = (obj) => {
-    const type = nonTypedTypeof(obj);
+    const type = nonTypedTypeof(obj); // supports array, date, regexp and null type but defaults to object for some reason
 
-    return type === 'object' ? typeof obj : type;
+    return type === 'object' ?
+        typeof obj // fix for bigint, symbol and any future type defaulting to object by remedial
+        : type;
 };
 
 const isTypeOf = <K extends NormalizedType>(obj: any, type: K): obj is StringToType[K] => {
