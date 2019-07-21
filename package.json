@@ -1,8 +1,8 @@
 {
   "name": "typesafe-typeof",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Build on top of remedials typeOf, based on Crockford's philosophy to use more valuable type strings.",
-  "main": "typeof.js",
+  "main": "index.js",
   "scripts": {
     "build": "rm -rf lib && tsc -p . && cp *.ts lib/",
     "prepublish": "npm run build",

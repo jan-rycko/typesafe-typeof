@@ -29,6 +29,21 @@ const checkType = (x: string | any[] | RegExp) => {
     }
 };
 
+console.log({
+    booleanIsEmpty: isEmpty(false), // false
+    numberIsEmpty: isEmpty(0), // false
+    stringIsEmpty: isEmpty(''), // true
+    functionIsEmpty: isEmpty(() => {}), // false
+    arrayIsEmpty: isEmpty([]), // true
+    dateIsEmpty: isEmpty(new Date()), // false
+    regexpIsEmpty: isEmpty(new RegExp('')), // true
+    objectIsEmpty: isEmpty({}), // true
+    bigintIsEmpty: isEmpty(BigInt(0)), // false
+    symbolIsEmpty: isEmpty(Symbol()), // false
+    nullIsEmpty: isEmpty(null), // true
+    undefinedIsEmpty: isEmpty(undefined), // true
+});
+
 const checkEmptyness = (x: string | any[]) => {
     if (isTypeOf(x, Type.string) && isEmpty<'string'>(x)) {
         // if (x === 'a') { // Typeerror – x is empty string: ''

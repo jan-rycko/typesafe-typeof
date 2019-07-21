@@ -64,6 +64,38 @@ null: null
 undefined: undefined
 ```
 
+## Empty check
+```ts
+import {isEmpty} from './empty';
+
+console.log({
+    booleanIsEmpty: isEmpty(false), // false
+    numberIsEmpty: isEmpty(0), // false
+    stringIsEmpty: isEmpty(''), // true
+    functionIsEmpty: isEmpty(() => {}), // false
+    arrayIsEmpty: isEmpty([]), // true
+    dateIsEmpty: isEmpty(new Date()), // false
+    regexpIsEmpty: isEmpty(new RegExp('')), // true
+    objectIsEmpty: isEmpty({}), // true
+    bigintIsEmpty: isEmpty(BigInt(0)), // false
+    symbolIsEmpty: isEmpty(Symbol()), // false
+    nullIsEmpty: isEmpty(null), // true
+    undefinedIsEmpty: isEmpty(undefined), // true
+});
+
+const checkEmptyness = (x: string | any[]) => {
+    if (isTypeOf(x, Type.string) && isEmpty<'string'>(x)) {
+        // if (x === 'a') { // Typeerror – x is empty string: ''
+
+        // }
+
+        if (x === '') { // ok
+            return true;
+        }
+    }
+};
+```
+
 ## Issues and contribution
 If you have any issues, use GitHub issue tracker.
 If you want to contribute, you're very welcome to send pull request as well as feature requests to me directly.
