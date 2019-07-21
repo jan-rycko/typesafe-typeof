@@ -1,0 +1,27 @@
+{
+  "name": "typesafe-typeof",
+  "version": "1.0.0",
+  "description": "Build on top of remedials typeOf, based on Crockford's philosophy to use more valuable type strings.",
+  "main": "typeof.js",
+  "scripts": {
+    "build": "rm -rf lib && tsc -p . && cp *.ts lib/",
+    "prepublish": "npm run build",
+    "build:publish": "npm run prepublish && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jan-rycko/typesafe-typeof.git"
+  },
+  "license": "MIT",
+  "files": [
+    "lib/"
+  ],
+  "devDependencies": {
+    "@types/node": "^12.6.8",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "remedial": "^1.0.8"
+  }
+}
