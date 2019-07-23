@@ -1,2 +1,3 @@
-export {Type, StringToTypeMap, NormalizedType, NormalizedTypeName, typeOf, isTypeOf} from './typeof';
-export {EmptyRegExp, StringToEmptyTypeMap, isEmpty} from './empty';
+export {Type, TypeNameByType, EmptyTypeByType, EmptyRegExp, StringToEmptyTypeMap, ExtendedType, StringToTypeMap, ExtendedTypeName} from 'type.model';
+export {typeOf, isTypeOf} from 'typeof';
+export {isEmpty} from 'empty';

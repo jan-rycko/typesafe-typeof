@@ -1,10 +1,11 @@
 {
   "name": "typesafe-typeof",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Build on top of remedials typeOf, based on Crockford's philosophy to use more valuable type strings.",
   "main": "index.js",
   "scripts": {
     "build": "rm -rf lib && tsc -p . && cp *.ts lib/",
+    "example": "ts-node -r tsconfig-paths/register example.ts",
     "prepublish": "npm run build",
     "build:publish": "npm run prepublish && npm publish"
   },
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@types/node": "^12.6.8",
     "ts-node": "^8.3.0",
+    "tsconfig-paths": "^3.8.0",
     "typescript": "^3.5.3",
     "utility-types": "^3.7.0"
   },

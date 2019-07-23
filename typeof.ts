@@ -1,40 +1,8 @@
 import { typeOf as nonTypedTypeof } from 'remedial';
 import {PickByValueExact} from 'utility-types';
+import { ExtendedType, ExtendedTypeName, StringToTypeMap, Type } from 'type.model';
 
-export enum Type {
-    boolean = 'boolean',
-    number = 'number',
-    string = 'string',
-    function = 'function',
-    array = 'array',
-    date = 'date',
-    regexp = 'regexp',
-    object = 'object',
-    bigint = 'bigint',
-    symbol = 'symbol',
-    null = 'null',
-    undefined = 'undefined',
-}
-
-export interface StringToTypeMap {
-    boolean: boolean
-    number: number
-    string: string
-    function: (...args: any[]) => any
-    array: any[]
-    date: Date
-    regexp: RegExp
-    object: { [I in string | number]?: any }
-    bigint: bigint
-    symbol: symbol
-    null: null
-    undefined: undefined
-}
-
-export type NormalizedTypeName<T extends keyof StringToTypeMap = keyof StringToTypeMap> = T;
-export type NormalizedType<T extends NormalizedTypeName = NormalizedTypeName> = StringToTypeMap[T];
-
-export const typeOf = <T extends NormalizedType, N extends keyof PickByValueExact<StringToTypeMap, T>>(obj: T): N => {
+export const typeOf = <T extends ExtendedType, N extends keyof PickByValueExact<StringToTypeMap, T>>(obj: T): N => {
     const type = nonTypedTypeof(obj); // supports array, date, regexp and null type but defaults to object for some reason
 
     return type === 'object' ?
@@ -42,6 +10,6 @@ export const typeOf = <T extends NormalizedType, N extends keyof PickByValueExac
         : type;
 };
 
-export const isTypeOf = <K extends NormalizedTypeName | Type>(obj: any, type: K): obj is StringToTypeMap[K] => {
+export const isTypeOf = <K extends ExtendedTypeName | Type>(obj: any, type: K): obj is StringToTypeMap[K] => {
     return typeOf(obj) === type;
 };
