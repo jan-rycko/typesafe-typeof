@@ -16,7 +16,7 @@ npm install --save typesafe-typeof
 
 ## Usage
 ```ts
-import {isTypeOf, typeOf, Type} from './typeof';
+import {isTypeOf, typeOf, Type} from 'typeof';
 
 console.log(typeOf(true)); // 'boolean'
 console.log(typeOf(1)); // 'number'
@@ -66,6 +66,8 @@ undefined: undefined
 
 ## Empty check
 ```ts
+import {isEmpty, Type} from 'typeof';
+
 type X = string | number;
 type Y = string | number | [];
 
