@@ -1,6 +1,7 @@
-import {isTypeOf, typeOf} from 'typeof';
-import {isEmpty} from 'empty';
-import {Type} from 'type.model';
+import {isTypeOf, typeOf} from './typeof';
+import {isEmpty} from './empty';
+import {Type} from './type.model';
+import {isFilled} from './filled';
 
 console.log(typeOf(true)); // 'boolean'
 console.log(typeOf(1)); // 'number'
@@ -102,6 +103,14 @@ const checkEmptyness = (x?: X, y?: Y) => {
     }
 
     // Check StringToEmptyTypeMap for full list of possible type outcomes
+
+    const string: string | number = 'filled';
+
+    if (isFilled(string, 'string')) {
+        console.log({ string });
+    }
+
+    return string;
 };
 
 checkEmptyness();
