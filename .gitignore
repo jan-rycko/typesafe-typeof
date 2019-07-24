@@ -1,4 +1,7 @@
 .idea
+.rts2_cache_cjs
+.rts2_cache_es
+.rts2_cache_umd
 node_modules
 docs/README.md
 lib
