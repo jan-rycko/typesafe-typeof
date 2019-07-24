@@ -1,12 +1,13 @@
 {
   "name": "typesafe-typeof",
-  "version": "1.0.6",
-  "description": "Build on top of remedials typeOf, based on Crockford's philosophy to use more valuable type strings.",
+  "version": "1.0.7",
+  "description": "Build on top of remedial/typeOf, based on Crockford's philosophy to use more valuable type strings.",
   "main": "index.js",
   "scripts": {
     "build": "rm -rf lib && tsc -p . && cp *.ts lib/",
+    "minify": "uglifyjs lib/empty.js lib/filled.js lib/typeof.js lib/index.js --output index.js",
     "example": "ts-node -r tsconfig-paths/register example.ts",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build && npm run minify",
     "build:publish": "npm run prepublish && npm publish"
   },
   "repository": {
@@ -22,6 +23,7 @@
     "ts-node": "^8.3.0",
     "tsconfig-paths": "^3.8.0",
     "typescript": "^3.5.3",
+    "uglify-js": "^3.6.0",
     "utility-types": "^3.7.0"
   },
   "dependencies": {
