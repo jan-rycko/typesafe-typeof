@@ -1,4 +1,7 @@
-import {ExtendedType, TypeNameByType, StringToFilledTypeMap, ExtendedTypeName} from './type.model';
+import {
+    ExtendedType,
+    ExtendedTypeName,
+} from './type.model';
 import {isTypeOf, typeOf} from './typeof';
 import {isEmptyCheck} from './empty';
 
