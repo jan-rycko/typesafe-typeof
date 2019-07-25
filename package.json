@@ -1,6 +1,6 @@
 {
   "name": "typesafe-typeof",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Build on top of remedial/typeOf, based on Crockford's philosophy to use more valuable type strings.",
   "main": "index.js",
   "source": "index.ts",

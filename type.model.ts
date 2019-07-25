@@ -13,6 +13,7 @@ export enum Type {
     symbol = 'symbol',
     null = 'null',
     undefined = 'undefined',
+    unset = 'unset',
 }
 
 type AnyFn = (...args: any[]) => any;
@@ -30,6 +31,7 @@ export interface StringToTypeMap {
     symbol: symbol
     null: null
     undefined: undefined
+    unset: null | undefined
 }
 
 export type ExtendedTypeName = keyof StringToTypeMap;
@@ -52,6 +54,7 @@ export interface StringToEmptyTypeMap extends StringToTypeMap {
     symbol: never
     null: null
     undefined: undefined
+    unset: null | undefined
 }
 
 export type NonNever<T extends {}> = Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;

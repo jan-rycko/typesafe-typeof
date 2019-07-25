@@ -17,7 +17,7 @@ console.log(typeOf(Symbol())); // 'symbol'
 console.log(typeOf(null)); // 'null'
 console.log(typeOf(undefined)); // 'undefined'
 
-const checkType = (x: string | any[] | RegExp) => {
+const checkType = (x: null | string | any[] | RegExp) => {
     if (typeOf(x) === 'array') {
         // x.map(z => z); // Typeerror – typeOf returns string 'array', so no typechecking here
     }
@@ -30,9 +30,28 @@ const checkType = (x: string | any[] | RegExp) => {
     if (isTypeOf(x, Type.regexp)) { // build-in enum is also provided
         console.log(x.test('a'));
     }
+
+    if (isTypeOf(x, 'undefined') || isTypeOf(x, 'null')) { // how many times...
+        console.log(x)
+    }
+
+    if (isTypeOf(x, 'unset')) { // Convenience type
+        console.log(x)
+    }
+
+    if (isTypeOf(x, ['null', 'undefined'])) { // but also
+        console.log(x)
+    }
+
+    if (isTypeOf(x, [Type.string, Type.array])) { // so this will also work
+        console.log(x.length);
+    }
 };
 
 checkType('aaa');
+checkType(['a', 'a']);
+checkType(/a/);
+checkType(null);
 
 type X = string | number;
 type Y = string | number | [];

@@ -31,37 +31,61 @@ console.log(typeOf(Symbol())); // 'symbol'
 console.log(typeOf(null)); // 'null'
 console.log(typeOf(undefined)); // 'undefined'
 
-const checkType = (x: string | any[] | RegExp) => {
+const checkType = (x: null | string | any[] | RegExp) => {
     if (typeOf(x) === 'array') {
         // x.map(z => z); // Typeerror – typeOf returns string 'array', so no typechecking here
     }
 
     if (isTypeOf(x, 'string')) {
         // x.map(a => a); // Typeerror – cannot map, x cannot be an array.
-        x.toUpperCase();  // ok, isTypeOf returns boolean type guard
+        console.log(x.toUpperCase());  // ok, isTypeOf returns boolean type guard
     }
 
     if (isTypeOf(x, Type.regexp)) { // build-in enum is also provided
-        x.test('a');
+        console.log(x.test('a'));
+    }
+
+    if (isTypeOf(x, 'undefined') || isTypeOf(x, 'null')) { // how many times...
+        console.log(x)
+    }
+
+    if (isTypeOf(x, 'unset')) { // Convenience type
+        console.log(x)
+    }
+
+    if (isTypeOf(x, ['null', 'undefined'])) { // but also
+        console.log(x)
+    }
+
+    if (isTypeOf(x, [Type.string, Type.array])) { // so this will also work
+        console.log(x.length);
     }
 };
+
+checkType('aaa');
+checkType(['a', 'a']);
+checkType(/a/);
+checkType(null);
 ```
 
 ## Supported types
 Full list of supported types:
 ```ts
-boolean: boolean
-number: number
-string: string
+boolean
+number
+string
 function: (...args: any[]) => any
 array: any[]
 date: Date
 regexp: RegExp
-object: { [I in string | number]?: any }
-bigint: bigint
-symbol: symbol
-null: null
-undefined: undefined
+object
+bigint
+symbol
+null
+undefined
+
+// convenience type for simple isSet checks
+unset
 ```
 
 ## Empty check
@@ -139,6 +163,20 @@ const checkEmptyness = (x?: X, y?: Y) => {
     }
 
     // Check StringToEmptyTypeMap for full list of possible type outcomes
+
+    const string: string | number = 'filled';
+
+    if (isFilled(string, 'string')) {
+        console.log({ string });
+    }
+
+    const nullified: null = null;
+
+    if (isFilled(nullified, 'null')) {
+        console.log(nullified); // nope
+    }
+
+    return string;
 };
 
 checkEmptyness();
