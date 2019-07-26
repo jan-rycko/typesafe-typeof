@@ -1,6 +1,6 @@
 {
   "name": "typesafe-typeof",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Build on top of remedial/typeOf, based on Crockford's philosophy to use more valuable type strings.",
   "main": "index.js",
   "source": "index.ts",
@@ -21,9 +21,7 @@
     "ts-node": "^8.3.0",
     "tsconfig-paths": "^3.8.0",
     "typescript": "^3.5.3",
-    "utility-types": "^3.7.0"
-  },
-  "dependencies": {
-    "remedial": "^1.0.8"
+    "utility-types": "^3.7.0",
+    "braces": "^2.3.1"
   }
 }

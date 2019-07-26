@@ -13,11 +13,15 @@ console.log(typeOf(new Date())); // 'date'
 console.log(typeOf(/a/)); // 'regexp'
 console.log(typeOf({})); // 'object'
 console.log(typeOf(BigInt(1))); // 'bigint'
+console.log(typeOf(NaN)); // 'nan'
 console.log(typeOf(Symbol())); // 'symbol'
 console.log(typeOf(null)); // 'null'
 console.log(typeOf(undefined)); // 'undefined'
+console.log(typeOf(new Promise(resolve => resolve()))); // 'promise'
+console.log(typeOf(new TypeError('message'))); // 'error'
+console.log(typeOf(new Int8Array(1))); // 'error'
 
-const checkType = (x: null | string | any[] | RegExp) => {
+const checkType = <X extends null | string | any[] | RegExp | RangeError | Promise<any>>(x: X) => {
     if (typeOf(x) === 'array') {
         // x.map(z => z); // Typeerror – typeOf returns string 'array', so no typechecking here
     }
@@ -39,42 +43,50 @@ const checkType = (x: null | string | any[] | RegExp) => {
         console.log(x)
     }
 
-    if (isTypeOf(x, ['null', 'undefined'])) { // but also
+    if (isTypeOf(x, 'null', 'undefined')) { // but also
         console.log(x)
     }
 
-    if (isTypeOf(x, [Type.string, Type.array])) { // so this will also work
+    if (isTypeOf(x, Type.string, Type.array)) { // so this will also work
         console.log(x.length);
     }
+
+    if (isTypeOf(x, 'error')) {
+        console.log(x.message);
+    }
+
+    if (isTypeOf(x, 'promise')) {
+        x.then(resp => console.log('Response from promise:', resp));
+    }
 };
+const promise = new Promise(resolve => resolve('hello'));
+
+checkType(promise); // see you at the end
 
 checkType('aaa');
 checkType(['a', 'a']);
 checkType(/a/);
 checkType(null);
+checkType(new RangeError('we\'re out of range'));
 
 type X = string | number;
-type Y = string | number | [];
 
-const checkEmptyness = (x?: X, y?: Y) => {
-    if (isEmpty(x)) { // no typechecking
-        if (x === 'a') {} // number cannot be empty, since 0 might also be set value, no typeerror here
+const checkEmptyness = (x?: X) => {
+    if (isEmpty(x)) { // no typeguard
+        // x.length // would fail typecheck
     }
 
-    if (isEmpty(y)) { // no typechecking
-        // if (y === 'a') {} // falsey typeerror – y is only [] here for some reason
-        if (isTypeOf(y, 'string') && y === 'a') {} // this would loose y's empty state
-    }
-
-    // better way
-
-    if (isEmpty<string>(x)) {
+    if (isEmpty(x, 'string')) { // this will typecheck fail if x is not typeof 'string'
         // if (x === 'a') {} // correct typeerror – x is empty ""
+        if (x === '') { console.log(x) } // no type error here
+        return;
     }
 
-    if (isEmpty(x, 'string')) { // this will fail if x is not typeof 'string'
-        // if (x === 'a') {} // correct typeerror – x is empty ""
-    }
+    if (typeof x === 'string') {} // this is ok, x still can be a string
+
+    if (isTypeOf(x, 'string')) { return }
+
+    if (typeof x === 'string') {} // this on the contrary will warn that x cannot be a string any more
 
     if (isEmpty(x, Type.string)) { // Works with Type enum
         // if (x === 'a') {} // typeerror – x is empty ""
@@ -87,10 +99,10 @@ const checkEmptyness = (x?: X, y?: Y) => {
         console.log(bool); //  never, false is also set value
     }
 
-    const number = false;
+    const object = {};
 
-    if (isEmpty(number, 'number')) {
-        console.log(number); //  never, 0 is also set value
+    if (isEmpty(object, 'object')) {
+        console.log(object); //  never, 0 is also set value
     }
 
     const date = new Date();
@@ -108,13 +120,13 @@ const checkEmptyness = (x?: X, y?: Y) => {
     const noop = () => {};
 
     if (isEmpty(noop, 'function')) {
-        console.log(noop.toString()); // () => undefined
+        console.log(noop.toString()); // () => {} or function() {} depending on build system
     }
 
     const functionNoop = function abc() {};
 
-    if (isEmpty(functionNoop, 'function')) {
-        console.log(functionNoop.toString()); // () => undefined
+    if (isEmpty(functionNoop, 'function', 'regexp')) {
+        console.log(functionNoop.toString()); // function abc() {}
     }
 
     const regexp = RegExp('');
@@ -123,7 +135,7 @@ const checkEmptyness = (x?: X, y?: Y) => {
         console.log(regexp.toString()); // /(?:)/ – regexp matching all :)
     }
 
-    // Check StringToEmptyTypeMap for full list of possible type outcomes
+    // Check EmptyTypeMap for full list of possible type outcomes
 
     const string: string | number = 'filled';
 
@@ -135,6 +147,16 @@ const checkEmptyness = (x?: X, y?: Y) => {
 
     if (isFilled(nullified, 'null')) {
         console.log(nullified); // nope
+    }
+
+    const nan: number = NaN;
+
+    if (isFilled(nan, 'number')) {
+        console.log(nan); // nope, let's leave what's not a number behind
+    }
+
+    if (isFilled(nan, 'nan')) {
+        console.log(nan); // never, NaN does not have any countable nor comparable value
     }
 
     return string;

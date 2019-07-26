@@ -1,36 +1,28 @@
-import {isTypeOf, typeOf} from './typeof';
+import {typeOf} from './typeof';
 import {
-    ExtendedTypeName,
-    StringToEmptyTypeMap,
+    EmptyTypeMap,
     Type,
-    StringToTypeMap,
-    ExtendedType,
-    TypeNameByType,
-    StringToFilledTypeMap,
-    PossibleEmptyMap,
-    PossibleEmptyType,
-    ImpossibleEmptyType, EmptyTypeNameByType, FilledByDefaultTypeNameByType,
+    TypeMap,
 } from './type.model';
 
-// export function isEmpty<T extends ImpossibleEmptyType, N extends FilledByDefaultTypeNameByType<T> = FilledByDefaultTypeNameByType<T>>(obj: T, type?: N): never;
-// export function isEmpty<T extends PossibleEmptyType>(obj: T): boolean;
-// export function isEmpty<T extends PossibleEmptyType, N extends EmptyTypeNameByType<T> = EmptyTypeNameByType<T>>(obj: T, type?: N): obj is PossibleEmptyMap[N];
-// export function isEmpty<T extends PossibleEmptyType | ImpossibleEmptyType, N extends TypeNameByType<T> = TypeNameByType<T>>(obj: T, type?: N): obj is PossibleEmptyMap[N] {
-export const isEmpty = <T extends ExtendedType, N extends TypeNameByType<T> = TypeNameByType<T>>(obj: ExtendedType, type?: N): obj is StringToEmptyTypeMap[N] => {
-    if (type && !isTypeOf(obj, type)) {
+export function isEmpty(obj: TypeMap[keyof TypeMap]): boolean;
+export function isEmpty<N extends keyof EmptyTypeMap | Type>(obj: TypeMap[keyof TypeMap], type: N, ...otherTypes: N[]): obj is (TypeMap & EmptyTypeMap)[N];
+export function isEmpty<N extends keyof EmptyTypeMap | Type>(obj: TypeMap[keyof TypeMap], ...type: N[]): obj is (TypeMap & EmptyTypeMap)[N] {
+    const typesToCheck: N[] = type;
+    const typeOfObj = typeOf(obj);
+
+    if (!typesToCheck.includes(typeOfObj as N)) {
         return false;
     }
 
-    const typeToCheck: N = type || typeOf(obj);
-
-    if (typeToCheck) {
-        return isEmptyCheck(obj, typeToCheck);
+    if (typeOfObj) {
+        return isEmptyCheck(obj, typeOfObj);
     }
 
     return false;
-};
+}
 
-const isObjectEmpty = (obj: StringToTypeMap[Type.object]) => {
+const isObjectEmpty = (obj: TypeMap[Type.object]) => {
     for (const key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
             return false;
@@ -40,21 +32,23 @@ const isObjectEmpty = (obj: StringToTypeMap[Type.object]) => {
     return true;
 };
 
-const isFunctionEmpty = (obj: StringToTypeMap[Type.function]) => {
+const isFunctionEmpty = (obj: TypeMap[Type.function]) => {
     const nonArrowString = obj.toString().replace(/(\s|\n|=>)/g, '');
 
-    return /^(function)?([a-zA-Z_$][0-9a-zA-Z_$]*)?\(\){}$/.test(nonArrowString);
+    return /^(function([a-zA-Z_$][0-9a-zA-Z_$]*)?)?\(\){}$/.test(nonArrowString);
 };
 
-export const isEmptyCheck = <K extends ExtendedTypeName | Type>(obj: any, type?: K): obj is StringToEmptyTypeMap[K] => {
+export const isEmptyCheck = <N extends keyof TypeMap>(obj: any, type?: N): obj is EmptyTypeMap[N] => {
     switch (type) {
         case Type.array: return obj.length === 0;
         case Type.object: return isObjectEmpty(obj);
         case Type.string: return obj === '';
         case Type.regexp: return obj.toString() === new RegExp('').toString();
         case Type.function: return isFunctionEmpty(obj);
-        case Type.undefined:
+        case Type.error: return obj.message === '';
+        case Type['undefined']:
         case Type.null:
+        case Type.nan:
             return true;
     }
 

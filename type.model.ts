@@ -1,83 +1,77 @@
-import {Overwrite, PickByValue, SetDifference, SetComplement} from 'utility-types';
+import {Overwrite, PickByValue, SetComplement} from 'utility-types';
 
 export enum Type {
-    boolean = 'boolean',
-    number = 'number',
-    string = 'string',
-    function = 'function',
     array = 'array',
-    date = 'date',
-    regexp = 'regexp',
-    object = 'object',
     bigint = 'bigint',
-    symbol = 'symbol',
+    boolean = 'boolean',
+    date = 'date',
+    error = 'error',
+    function = 'function',
+    nan = 'nan',
     null = 'null',
-    undefined = 'undefined',
+    number = 'number',
+    object = 'object',
+    promise = 'promise',
+    regexp = 'regexp',
+    string = 'string',
+    symbol = 'symbol',
+    'undefined' = 'undefined',
     unset = 'unset',
 }
 
 type AnyFn = (...args: any[]) => any;
 
-export interface StringToTypeMap {
-    boolean: boolean
-    number: number
-    string: string
-    function: Function & AnyFn
-    array: Array<any> & any[]
-    date: Date
-    regexp: RegExp
-    object: Object & { [I in string | number]?: any }
+export interface TypeMap {
+    array: any[]
     bigint: bigint
-    symbol: symbol
+    boolean: boolean
+    date: Date
+    error: Error
+    function: AnyFn
+    nan: number
     null: null
+    number: number
+    object: Object & { [I in string | number | symbol]?: any }
+    promise: Promise<any>
+    regexp: RegExp
+    string: string
+    symbol: symbol
     undefined: undefined
     unset: null | undefined
 }
 
-export type ExtendedTypeName = keyof StringToTypeMap;
-export type ExtendedType<K extends ExtendedTypeName = ExtendedTypeName> = StringToTypeMap[K];
+export type ExtendedTypeName = keyof TypeMap;
+export type ExtendedType<K extends ExtendedTypeName = ExtendedTypeName> = TypeMap[K];
 
 export type EmptyRegExp = RegExp & {
     readonly source: '(?:)'
 }
 
-export interface StringToEmptyTypeMap extends StringToTypeMap {
-    boolean: never
-    number: never
-    string: ''
-    function: () => undefined
+export interface EmptyTypeMap extends TypeMap {
     array: []
-    date: never
-    regexp: EmptyRegExp
-    object: { [I in string | number]: never }
     bigint: never
-    symbol: never
+    boolean: never
+    date: never
+    error: Overwrite<Error, { message: '' }>
+    function: () => void
     null: null
+    number: never
+    nan: number
+    object: Object & { [I in string | number | symbol]: never }
+    promise: never
+    regexp: EmptyRegExp
+    string: ''
+    symbol: never
     undefined: undefined
     unset: null | undefined
 }
 
-export type NonNever<T extends {}> = Pick<T, { [K in keyof T]: T[K] extends never ? never : K }[keyof T]>;
-export type Never<T extends {}> = Pick<T, { [K in keyof T]: T[K] extends never ? K : never }[keyof T]>;
-
-export type PossibleEmptyMap = NonNever<StringToEmptyTypeMap>;
-export type PossibleEmptyInitialTypeMap = Pick<StringToTypeMap, keyof PossibleEmptyMap>;
-export type PossibleEmptyType = PossibleEmptyInitialTypeMap[keyof PossibleEmptyInitialTypeMap];
-export type EmptyTypeNameByType<V extends ExtendedType> = keyof PickByValue<PossibleEmptyMap, V>;
-
-// export type PossibleEmptyTypeName = keyof PossibleEmptyInitialTypeMap;
-
-export type ImpossibleEmptyMap = Never<StringToEmptyTypeMap>;
-export type ImpossibleEmptyInitialTypeMap = Pick<StringToTypeMap, keyof ImpossibleEmptyMap>;
-export type ImpossibleEmptyType = ImpossibleEmptyInitialTypeMap[keyof ImpossibleEmptyInitialTypeMap];
-export type FilledByDefaultTypeNameByType<V extends ImpossibleEmptyType> = keyof PickByValue<ImpossibleEmptyMap, V>;
-// export type ImpossibleToBeEmptyTypeName = keyof ImpossibleToBeEmptyInitialTypeMap;
-
-export type StringToFilledTypeMap = Overwrite<StringToTypeMap, {
-    string: SetComplement<string, ''>
+export type FilledTypeMap = Overwrite<TypeMap, {
+    nan: never
     null: never
     undefined: never
+    unset: never
 }>
 
-export type TypeNameByType<V extends ExtendedType> = keyof PickByValue<StringToTypeMap, V>;
-export type EmptyTypeByType<V extends ExtendedType> = StringToEmptyTypeMap[TypeNameByType<V>];
+export type TypeNameByType<V extends ExtendedType> = keyof PickByValue<TypeMap, V>;
+export type EmptyTypeByType<V extends ExtendedType> = EmptyTypeMap[TypeNameByType<V>];
